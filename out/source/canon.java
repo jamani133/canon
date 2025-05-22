@@ -19,6 +19,8 @@ BarIndicator linePressure = new BarIndicator();
 TargetSlider tankPressure = new TargetSlider();
 Joystick aimer = new Joystick();
 PlasmaIndicator indicator = new PlasmaIndicator();
+ValSlider time = new ValSlider();
+Button btn = new Button();
 public void setup(){
     /* size commented out by preprocessor */;
     tankPressure.setup(50,220,400,50);
@@ -26,13 +28,24 @@ public void setup(){
 
 public void draw(){
     background(200);
+
+    bgRect(600,600,300,100);
+
     linePressure.fill=map(millis()%1000,0,999,0,1);
-    linePressure.show();
-    tankPressure.update();
-    tankPressure.show();
-    aimer.update();
-    aimer.render();
-    indicator.render();
+    linePressure.posX = sin(PApplet.parseFloat(millis())/500.0f)*400+450;
+
+    btn.handle();
+    time.handle();
+    linePressure.handle();
+    tankPressure.handle();
+    aimer.handle();
+    indicator.handle();
+}
+public void bgRect(float posX, float posY, float width, float height){
+    stroke(80);
+    strokeWeight(3);
+    fill(120);
+    rect(posX,posY,width,height,20);
 }
 class BarIndicator{
     float posX = 50;
@@ -61,11 +74,42 @@ class BarIndicator{
         fill(255);
         textAlign(LEFT,CENTER);
         textSize(25);
-        text(heading+str(PApplet.parseFloat(round(this.fill*range*100))/100)+unit,this.posX,this.posY-18);
+        text(heading+nf(PApplet.parseFloat(round(this.fill*range*100))/100,0,2)+unit,this.posX,this.posY-18);
+    }
+    public void handle(){
+        //this.update();
+        this.show();
     }
 }
 class Button{
 
+    float posX = 100;
+    float posY = 400;
+
+    public void render(){
+        if(mouseIn(this.posX+50,this.posY+20,40)){
+            fill(160,160,190);
+            stroke(40);
+            strokeWeight(3);
+        }else{
+            fill(160);
+            stroke(110);
+            strokeWeight(3);
+        }
+        rect(this.posX,this.posY,100,40);
+        fill(0);
+        textAlign(CENTER,CENTER);
+        textSize(30);
+        text("Button",this.posX+50,this.posY+20);
+    }
+    public void update(){
+
+    }
+
+    public void handle(){
+        this.update();
+        this.render();
+    }
 }
 class Joystick{
     float size = 200;
@@ -112,11 +156,16 @@ class Joystick{
         }
         this.prevPress = mousePressed;
     }
+    public void handle(){
+        this.update();
+        this.render();
+    }
 }
 class PlasmaIndicator{
     float posX = 500;
     float posY = 200;
     boolean active = false;
+    boolean requested = false;
     public void render(){
         
         stroke(120);
@@ -127,11 +176,12 @@ class PlasmaIndicator{
         noStroke();
         ellipse(this.posX+5,this.posY+25,10,5);
         ellipse(this.posX+95,this.posY+25,10,5);
-        stroke(120);
+        stroke(requested?color(200,200,255):color(110));
         strokeWeight(2);
         noFill();
         rect(this.posX,this.posY,100,50,25);
-        this.active=keyPressed;
+        requested = mousePressed;
+        active = keyPressed;
         if(this.active){
             stroke(200,200,255);
             strokeWeight(sqr(random(1,2)));
@@ -148,15 +198,12 @@ class PlasmaIndicator{
             }
         }
     }
+    public void handle(){
+        //this.update();
+        this.render();
+    }
 }
 
-public float sqr(float a){
-    return a*a;
-}
-
-public float sqrs(float a){
-    return a<0?-a*a:a*a;
-}
 class TargetSlider{
     float posX = 10;
     float posY = 10;
@@ -211,7 +258,7 @@ class TargetSlider{
         strokeWeight(2);
         if(!focused && !dragging){
             fill(160);
-            stroke(130);
+            stroke(110);
             rect(max(min(this.setpoint*this.width-(this.textFieldSize/2),this.width-this.textFieldSize),0)+this.posX,this.posY+this.height+15,this.textFieldSize,30);
             fill(0);
             textAlign(CENTER,CENTER);
@@ -219,7 +266,7 @@ class TargetSlider{
             text(str(PApplet.parseFloat(round(round*this.setpoint*this.range))/round)+this.unit,   max(min(this.setpoint*this.width,this.width-(this.textFieldSize/2)),(this.textFieldSize/2))+this.posX,this.posY+this.height+30);
         }else{
             fill(160,160,190);
-            stroke(130);
+            stroke(40);
             rect(max(min(this.setpoint*this.width-(this.textFieldSizeF/2),this.width-this.textFieldSizeF),0)+this.posX,this.posY+this.height+15,this.textFieldSizeF,40);
             fill(0);
             textAlign(CENTER,CENTER);
@@ -229,11 +276,11 @@ class TargetSlider{
         fill(255);
         textAlign(LEFT,CENTER);
         textSize(25);
-        text(heading+str(PApplet.parseFloat(round(this.fill*range*100))/100)+unit,this.posX,this.posY-18);
+        text(heading+nf(PApplet.parseFloat(round(this.fill*range*100))/100,0,2)+unit,this.posX,this.posY-18);
     }
     public void update(){
         if(mousePressed && !this.prevPressed){
-            if(mouseIn(this.width*this.setpoint+this.posX,this.height+this.posY+10,20)){
+            if(mouseIn(this.width*this.setpoint+this.posX,this.height+this.posY+10,30)){
                 this.dragging = true;
             }
         }
@@ -244,6 +291,59 @@ class TargetSlider{
             this.setpoint=max(0,min(1,map(mouseX,this.posX,this.posX+this.width,0,1)));
         }
         this.prevPressed = mousePressed;
+    }
+    public void handle(){
+        this.update();
+        this.show();
+    }
+}
+class ValSlider{
+    float posX = 500;
+    float posY = 300;
+    float value = 0;
+    float range = 10;
+    String unit = "S";
+    float mouseStartX = 0;
+    boolean dragging = false;
+    boolean prevPress = false;
+    float valueOffset = 0;
+    public void render(){
+        if(this.dragging||mouseIn(this.posX+50,this.posY+20,40)){
+            fill(160,160,190);
+            stroke(40);
+            strokeWeight(3);
+        }else{
+            fill(160);
+            stroke(110);
+            strokeWeight(3);
+        }
+        rect(this.posX,this.posY,100,40);
+        fill(0);
+        textAlign(CENTER,CENTER);
+        textSize(30);
+        text(nf(round(40*this.value*this.range)/40.0f,0,2)+this.unit,this.posX+50,this.posY+20);
+    }
+    public void update(){
+        if(mouseIn(this.posX+50,this.posY+20,40)){
+            if(mousePressed && !this.prevPress){
+                this.dragging = true;
+                this.mouseStartX = mouseX;
+                this.valueOffset = this.value;
+            }
+        }
+        if(!mousePressed){
+            this.dragging = false;
+        }
+        if(dragging){
+            this.value = min(1,max(0,round(40.0f*(this.valueOffset+((mouseX-mouseStartX)/400)))/40.0f));
+        }
+
+        this.prevPress = mousePressed;
+    }
+
+    public void handle(){
+        this.update();
+        this.render();
     }
 }
 public boolean within(float a, float b, float range){
@@ -256,6 +356,14 @@ public boolean mouseIn(float x, float y, float r){
     float dx = abs(mouseX-x);
     float dy = abs(mouseY-y);
     return sqrt((dx*dx)+(dy*dy)) <= r;
+}
+
+public float sqr(float a){
+    return a*a;
+}
+
+public float sqrs(float a){
+    return a<0?-a*a:a*a;
 }
 
 

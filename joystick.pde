@@ -43,4 +43,8 @@ class Joystick{
         }
         this.prevPress = mousePressed;
     }
+    void handle(){
+        this.update();
+        this.render();
+    }
 }

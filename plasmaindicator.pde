@@ -2,6 +2,7 @@ class PlasmaIndicator{
     float posX = 500;
     float posY = 200;
     boolean active = false;
+    boolean requested = false;
     void render(){
         
         stroke(120);
@@ -12,11 +13,12 @@ class PlasmaIndicator{
         noStroke();
         ellipse(this.posX+5,this.posY+25,10,5);
         ellipse(this.posX+95,this.posY+25,10,5);
-        stroke(120);
+        stroke(requested?color(200,200,255):color(110));
         strokeWeight(2);
         noFill();
         rect(this.posX,this.posY,100,50,25);
-        this.active=keyPressed;
+        requested = mousePressed;
+        active = keyPressed;
         if(this.active){
             stroke(200,200,255);
             strokeWeight(sqr(random(1,2)));
@@ -33,12 +35,9 @@ class PlasmaIndicator{
             }
         }
     }
+    void handle(){
+        //this.update();
+        this.render();
+    }
 }
 
-float sqr(float a){
-    return a*a;
-}
-
-float sqrs(float a){
-    return a<0?-a*a:a*a;
-}

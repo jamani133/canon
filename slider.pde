@@ -52,7 +52,7 @@ class TargetSlider{
         strokeWeight(2);
         if(!focused && !dragging){
             fill(160);
-            stroke(130);
+            stroke(110);
             rect(max(min(this.setpoint*this.width-(this.textFieldSize/2),this.width-this.textFieldSize),0)+this.posX,this.posY+this.height+15,this.textFieldSize,30);
             fill(0);
             textAlign(CENTER,CENTER);
@@ -60,7 +60,7 @@ class TargetSlider{
             text(str(float(round(round*this.setpoint*this.range))/round)+this.unit,   max(min(this.setpoint*this.width,this.width-(this.textFieldSize/2)),(this.textFieldSize/2))+this.posX,this.posY+this.height+30);
         }else{
             fill(160,160,190);
-            stroke(130);
+            stroke(40);
             rect(max(min(this.setpoint*this.width-(this.textFieldSizeF/2),this.width-this.textFieldSizeF),0)+this.posX,this.posY+this.height+15,this.textFieldSizeF,40);
             fill(0);
             textAlign(CENTER,CENTER);
@@ -70,11 +70,11 @@ class TargetSlider{
         fill(255);
         textAlign(LEFT,CENTER);
         textSize(25);
-        text(heading+str(float(round(this.fill*range*100))/100)+unit,this.posX,this.posY-18);
+        text(heading+nf(float(round(this.fill*range*100))/100,0,2)+unit,this.posX,this.posY-18);
     }
     void update(){
         if(mousePressed && !this.prevPressed){
-            if(mouseIn(this.width*this.setpoint+this.posX,this.height+this.posY+10,20)){
+            if(mouseIn(this.width*this.setpoint+this.posX,this.height+this.posY+10,30)){
                 this.dragging = true;
             }
         }
@@ -85,5 +85,9 @@ class TargetSlider{
             this.setpoint=max(0,min(1,map(mouseX,this.posX,this.posX+this.width,0,1)));
         }
         this.prevPressed = mousePressed;
+    }
+    void handle(){
+        this.update();
+        this.show();
     }
 }

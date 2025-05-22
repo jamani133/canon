@@ -25,6 +25,10 @@ class BarIndicator{
         fill(255);
         textAlign(LEFT,CENTER);
         textSize(25);
-        text(heading+str(float(round(this.fill*range*100))/100)+unit,this.posX,this.posY-18);
+        text(heading+nf(float(round(this.fill*range*100))/100,0,2)+unit,this.posX,this.posY-18);
+    }
+    void handle(){
+        //this.update();
+        this.show();
     }
 }
