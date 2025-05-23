@@ -1,0 +1,18 @@
+Arduino side
+    recieve val
+    set outputs
+    decrement counters
+    return feedback
+
+    handle magic fill sensor
+
+
+Controller side
+    Firing sequence
+    IO manager
+    adjust sequence
+    heartbeat
+
+
+IRL side
+    everything lol
