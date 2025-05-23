@@ -1,5 +1,5 @@
-float waterPosX = 100;
-float waterPosY = 100;
+float waterPosX = 600;
+float waterPosY = 310;
 
 BarIndicator waterLevelI = new BarIndicator();
 Button resetWaterB = new Button();

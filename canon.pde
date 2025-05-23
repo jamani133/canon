@@ -14,14 +14,22 @@ public color BRIGHT_BLUE = color(80,80,255);
 
 
 void setup(){
-    size(1200,900);
+    size(1700,535+450);
     setupWaterSection();
     setupPlasmaSection();
+    setupPressureSection();
+    setupLineSection();
+    setupMotorSection();
+    setupFireSection();
 }
 
 void draw(){
     background(200);
     handleWaterSection();
     handlePlasmaSection();
-    plasmaI.active = millis()%1000>500;
+    handlePressureSection();
+    handleLineSection();
+    handleFireSection();
+    handleMotorSection();
+    plasmaI.active = keyPressed;
 }

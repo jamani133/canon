@@ -17,6 +17,7 @@ class TargetSlider{
     String unit = "MPa";
     int round = 10;
     int roundF = 100;
+    boolean drawBG = false;
     String heading = "Pressure : ";
     void setup(float x, float y, float w, float h){
         this.posX=x;
@@ -25,17 +26,20 @@ class TargetSlider{
         this.height=h;
     }
     void show(){
-        fill(120);
-        strokeWeight(3);
-        stroke(80);
-        rect(this.posX-25,this.posY-40,this.width+50,this.height+95,20);
+        if(this.drawBG){
+            fill(120);
+            strokeWeight(3);
+            stroke(80);
+            rect(this.posX-25,this.posY-40,this.width+50,this.height+95,20);
+        }
 
         fill(this.bg);
         strokeWeight(3);
         stroke(0);
         rect(this.posX,this.posY,this.width,this.height);
         fill(this.fg);
-        rect(this.posX,this.posY,this.width*this.fill,this.height);
+        noStroke();
+        rect(this.posX+3,this.posY+3,this.width*this.fill-4,this.height-5);
         fill(slideColor);
         stroke(slideColor);
         strokeWeight(2);

@@ -1,5 +1,5 @@
-float plasmaPosX = 100;
-float plasmaPosY = 300;
+float plasmaPosX = 50;
+float plasmaPosY = 310;
 
 PlasmaIndicator plasmaI = new PlasmaIndicator();
 Indicator plasmaAutoI = new Indicator();
@@ -22,6 +22,12 @@ void setupPlasmaSection(){
     plasmaDurationS.value=0.15;
     plasmaDelayS.value=0.3;
     plasmaTestB.posY = plasmaAutoB.posY = plasmaPosY+110;
+    plasmaTestB.posX = plasmaPosX+25;
+    plasmaTestB.baseColor = CYAN;
+    plasmaTestB.text = "IGNITE";
+    plasmaAutoB.posX = plasmaPosX+141.666;
+    plasmaAutoB.baseColor = MAGENTA;
+    plasmaAutoB.text = "Toggle";
 }
 
 
@@ -40,4 +46,6 @@ void handlePlasmaSection(){
     plasmaAutoI.handle();
     plasmaDelayS.handle();
     plasmaDurationS.handle();
+    plasmaAutoB.handle();
+    plasmaTestB.handle();
 }

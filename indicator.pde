@@ -5,6 +5,7 @@ class Indicator{
     boolean requested = false;
     color baseColor = YELLOW;
     String text = "Indicator";
+    float textSize = 25;
 
     void render(){ 
         if(this.active){
@@ -21,7 +22,7 @@ class Indicator{
         rect(this.posX,this.posY,100,40);
         fill(0);
         textAlign(CENTER,CENTER);
-        textSize(25);
+        textSize(this.textSize);
         text(this.text,this.posX+50,this.posY+20);
     }
 

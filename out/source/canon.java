@@ -34,13 +34,21 @@ public void setup(){
     /* size commented out by preprocessor */;
     setupWaterSection();
     setupPlasmaSection();
+    setupPressureSection();
+    setupLineSection();
+    setupMotorSection();
+    setupFireSection();
 }
 
 public void draw(){
     background(200);
     handleWaterSection();
     handlePlasmaSection();
-    plasmaI.active = millis()%1000>500;
+    handlePressureSection();
+    handleLineSection();
+    handleFireSection();
+    handleMotorSection();
+    plasmaI.active = keyPressed;
 }
 public void bgRect(float posX, float posY, float width, float height){
     stroke(80);
@@ -73,7 +81,8 @@ class BarIndicator{
         stroke(0);
         rect(this.posX,this.posY,this.width,this.height);
         fill(this.fg);
-        rect(this.posX,this.posY,this.width*this.fill,this.height);
+        noStroke();
+        rect(this.posX+3,this.posY+3,this.width*this.fill-4,this.height-5);
         fill(255);
         textAlign(LEFT,CENTER);
         textSize(25);
@@ -129,6 +138,83 @@ class Button{
         this.render();
     }
 }
+class FireButton{
+    float posX = 0;
+    float posY = 0;
+    boolean active = false;
+    boolean armed = false;
+    PImage background = null;
+    boolean prevPressed = false;
+    public void render(){
+        if(background != null){
+            image(background,this.posX,this.posY,450,450);
+        }
+        if(this.armed){
+            if(this.active){
+                fill(requestedColor(RED));
+            }else{
+                fill(RED);
+            }
+        }else{
+            fill(inactiveColor(RED));
+        }
+        stroke(0);
+        strokeWeight(mouseIn(this.posX+225,this.posY+225,175)?5:1);
+        ellipse(this.posX+225,this.posY+225,350,350);
+        if(this.armed){
+            fill(100,0,0);
+            textSize(120);
+            textAlign(CENTER,CENTER);
+            text("FIRE",this.posX+225,this.posY+225);
+        }else{
+            fill(75,0,0);
+            textSize(70);
+            textAlign(CENTER,CENTER);
+            text("DISARMED",this.posX+225,this.posY+225);
+            fill(120,120,120,120);
+            stroke(120);
+            strokeWeight(4);
+            rect(this.posX+25,this.posY+25,399,399,40);
+        }
+        noFill();
+        stroke(90);
+        strokeWeight(8);
+        rect(this.posX,this.posY,450,450,5);
+    }
+    public void update(){
+        if(mousePressed){
+            if(mouseIn(this.posX+225,this.posY+225,175)){
+                if(!this.prevPressed){
+                    active = true;
+                }
+            }else{
+                active = false;
+            }
+        }else{
+            active = false;
+        }
+        this.prevPressed = mousePressed;
+    }
+
+    public void handle(){
+        this.update();
+        this.render();
+    }
+}
+float firePosX = 1150;
+float firePosY = 215;
+FireButton fireButtonB = new FireButton();
+public void setupFireSection(){
+    fireButtonB.background=loadImage("buttonBG.png");
+    fireButtonB.posX = firePosX+25;
+    fireButtonB.posY = firePosY+25;
+}
+
+public void handleFireSection(){
+    bgRect(firePosX,firePosY,500,600);
+    fireButtonB.armed = millis()%10000>5000;
+    fireButtonB.handle();
+}
 class Indicator{
     float posX = 200;
     float posY = 500;
@@ -136,6 +222,7 @@ class Indicator{
     boolean requested = false;
     int baseColor = YELLOW;
     String text = "Indicator";
+    float textSize = 25;
 
     public void render(){ 
         if(this.active){
@@ -152,7 +239,7 @@ class Indicator{
         rect(this.posX,this.posY,100,40);
         fill(0);
         textAlign(CENTER,CENTER);
-        textSize(25);
+        textSize(this.textSize);
         text(this.text,this.posX+50,this.posY+20);
     }
 
@@ -210,13 +297,43 @@ class Joystick{
         this.render();
     }
 }
-float plasmaPosX = 100;
-float plasmaPosY = 300;
+
+BarIndicator linePressureI = new BarIndicator();
+
+public void setupLineSection(){
+    linePressureI.posX = 1175;
+    linePressureI.posY = 90;
+    linePressureI.drawBG = true;
+    linePressureI.heading = "Line Pressure : ";
+    linePressureI.unit = " MPa";
+    linePressureI.range = 1;
+    linePressureI.width = 450;
+}
+public void handleLineSection(){
+    linePressureI.handle();
+}
+float motorPosX = 50;
+float motorPosY = 535;
+
+public void setupMotorSection(){
+
+}
+
+public void handleMotorSection(){
+    bgRect(motorPosX,motorPosY,500,400);
+}
+
+
+//act2 s2 act3 S1&2
+float plasmaPosX = 50;
+float plasmaPosY = 310;
 
 PlasmaIndicator plasmaI = new PlasmaIndicator();
 Indicator plasmaAutoI = new Indicator();
 ValSlider plasmaDelayS = new ValSlider();
 ValSlider plasmaDurationS = new ValSlider();
+Button plasmaTestB = new Button();
+Button plasmaAutoB = new Button();
 
 public void setupPlasmaSection(){
     plasmaI.posX=plasmaPosX+25;
@@ -231,6 +348,13 @@ public void setupPlasmaSection(){
     plasmaDurationS.posY=plasmaPosY+45;
     plasmaDurationS.value=0.15f;
     plasmaDelayS.value=0.3f;
+    plasmaTestB.posY = plasmaAutoB.posY = plasmaPosY+110;
+    plasmaTestB.posX = plasmaPosX+25;
+    plasmaTestB.baseColor = CYAN;
+    plasmaTestB.text = "IGNITE";
+    plasmaAutoB.posX = plasmaPosX+141.666f;
+    plasmaAutoB.baseColor = MAGENTA;
+    plasmaAutoB.text = "Toggle";
 }
 
 
@@ -249,6 +373,8 @@ public void handlePlasmaSection(){
     plasmaAutoI.handle();
     plasmaDelayS.handle();
     plasmaDurationS.handle();
+    plasmaAutoB.handle();
+    plasmaTestB.handle();
 }
 class PlasmaIndicator{
     float posX = 500;
@@ -291,6 +417,62 @@ class PlasmaIndicator{
     }
 }
 
+float pressurePosX = 50;
+float pressurePosY = 50;
+
+TargetSlider pressureS = new TargetSlider();
+Button bleedB = new Button();
+Button fillB = new Button();
+Button adjustB = new Button();
+Button stopB = new Button();
+Indicator fillingI = new Indicator();
+Indicator bleedingI = new Indicator();
+Indicator adjustingI = new Indicator();
+
+public void setupPressureSection(){
+    pressureS.posX = pressurePosX+25;
+    pressureS.posY = pressurePosY+40;
+    pressureS.heading = "Tank Pressure : ";
+    pressureS.unit = " MPa";
+    pressureS.range = 1;
+    pressureS.width = 1000;
+    bleedB.posY = fillB.posY = adjustB.posY = stopB.posY = fillingI.posY = bleedingI.posY = adjustingI.posY = pressurePosY+145;
+    fillingI.baseColor = GREEN;
+    bleedingI.baseColor = GREEN;
+    adjustingI.baseColor = YELLOW;
+
+    stopB.baseColor = ORANGE;
+    adjustingI.textSize = 20;
+
+    bleedB.posX = pressurePosX+25;
+    fillB.posX = pressurePosX+150;
+    fillingI.posX = pressurePosX+300;
+    bleedingI.posX = pressurePosX+425;
+    adjustB.posX = pressurePosX+1025-375;
+    stopB.posX = pressurePosX+1025-250;
+    adjustingI.posX = pressurePosX+1025-125;
+
+    bleedB.text = "Bleed";
+    fillB.text = "Fill";
+    fillingI.text = "Filling";
+    bleedingI.text = "Bleeding";
+    adjustB.text = "Adjust";
+    stopB.text = "Stop";
+    adjustingI.text = "Adjusting";
+}
+public void handlePressureSection(){
+    bgRect(pressurePosX,pressurePosY,1050,210);
+    
+    bleedB.handle();
+    fillB.handle();
+    stopB.handle();
+    adjustB.handle();
+    bleedingI.handle();
+    fillingI.handle();
+    adjustingI.handle();
+
+    pressureS.handle();
+}
 class TargetSlider{
     float posX = 10;
     float posY = 10;
@@ -310,6 +492,7 @@ class TargetSlider{
     String unit = "MPa";
     int round = 10;
     int roundF = 100;
+    boolean drawBG = false;
     String heading = "Pressure : ";
     public void setup(float x, float y, float w, float h){
         this.posX=x;
@@ -318,17 +501,20 @@ class TargetSlider{
         this.height=h;
     }
     public void show(){
-        fill(120);
-        strokeWeight(3);
-        stroke(80);
-        rect(this.posX-25,this.posY-40,this.width+50,this.height+95,20);
+        if(this.drawBG){
+            fill(120);
+            strokeWeight(3);
+            stroke(80);
+            rect(this.posX-25,this.posY-40,this.width+50,this.height+95,20);
+        }
 
         fill(this.bg);
         strokeWeight(3);
         stroke(0);
         rect(this.posX,this.posY,this.width,this.height);
         fill(this.fg);
-        rect(this.posX,this.posY,this.width*this.fill,this.height);
+        noStroke();
+        rect(this.posX+3,this.posY+3,this.width*this.fill-4,this.height-5);
         fill(slideColor);
         stroke(slideColor);
         strokeWeight(2);
@@ -475,8 +661,8 @@ public int requestedColor(int inC){
     return(color(    min(255,(red(inC))*1.3f)   ,     min((green(inC))*1.3f,255),     min(255,(blue(inC))*1.3f)     ));
 }
 
-float waterPosX = 100;
-float waterPosY = 100;
+float waterPosX = 600;
+float waterPosY = 310;
 
 BarIndicator waterLevelI = new BarIndicator();
 Button resetWaterB = new Button();
@@ -516,7 +702,7 @@ public void handleWaterSection(){
 }
 
 
-  public void settings() { size(1200, 900); }
+  public void settings() { size(1700, 535+450); }
 
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "canon" };
