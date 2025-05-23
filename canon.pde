@@ -1,3 +1,5 @@
+String commandBuffer = "";
+
 
 public color RED = color(200,0,0);
 public color GREEN = color(0,200,0);
@@ -10,7 +12,7 @@ public color ORANGE = color(180,90,0);
 public color LIGHT_BLUE = color(80,80,160);
 public color BRIGHT_BLUE = color(80,80,255);
 
-
+boolean armed = false;
 
 
 void setup(){
@@ -25,11 +27,14 @@ void setup(){
 
 void draw(){
     background(200);
+    setFeedbacks();
+
     handleWaterSection();
     handlePlasmaSection();
     handlePressureSection();
     handleLineSection();
     handleFireSection();
     handleMotorSection();
-    plasmaI.active = keyPressed;
+
+    sendCommands();
 }

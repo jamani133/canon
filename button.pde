@@ -7,14 +7,22 @@ class Button{
     boolean prevPressed = false;
     String text = "Button";
     float textSize = 25;
+    boolean prevActive = false;
+    boolean needArm = false;
     void render(){
-        if(mouseInRect(this.posX,this.posY,100,40)){
-            fill(this.active?pressedColor(baseColor):selectedColor(baseColor));
-            stroke(40);
-            strokeWeight(3);
+        if(armed || !needArm){
+            if(mouseInRect(this.posX,this.posY,100,40)){
+                fill(this.active?pressedColor(baseColor):selectedColor(baseColor));
+                stroke(40);
+                strokeWeight(3);
+            }else{
+                fill(baseColor);
+                stroke(110);
+                strokeWeight(3);
+            }
         }else{
-            fill(baseColor);
-            stroke(110);
+            fill(brightness(baseColor)/1.5);
+            stroke(110);    
             strokeWeight(3);
         }
         rect(this.posX,this.posY,100,40);
@@ -24,9 +32,11 @@ class Button{
         text(this.text,this.posX+50,this.posY+20);
     }
     void update(){
+        this.prevActive = this.active;
+        
         if(mousePressed){
             if(mouseInRect(this.posX,this.posY,100,40)){
-                if(!this.prevPressed){
+                if(!this.prevPressed && (armed || !needArm)){
                     active = true;
                 }
             }else{
@@ -35,9 +45,9 @@ class Button{
         }else{
             active = false;
         }
+        
         this.prevPressed = mousePressed;
     }
-
     void handle(){
         this.update();
         this.render();

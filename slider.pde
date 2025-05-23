@@ -19,6 +19,7 @@ class TargetSlider{
     int roundF = 100;
     boolean drawBG = false;
     String heading = "Pressure : ";
+    float prevSetpoint = 0;
     void setup(float x, float y, float w, float h){
         this.posX=x;
         this.posY=y;
@@ -77,6 +78,7 @@ class TargetSlider{
         text(heading+nf(float(round(this.fill*range*100))/100,0,2)+unit,this.posX,this.posY-18);
     }
     void update(){
+        this.prevSetpoint = this.setpoint;
         if(mousePressed && !this.prevPressed){
             if(mouseIn(this.width*this.setpoint+this.posX,this.height+this.posY+10,30)){
                 this.dragging = true;

@@ -15,6 +15,8 @@ import java.io.IOException;
 
 public class canon extends PApplet {
 
+String commandBuffer = "";
+
 
 public int RED = color(200,0,0);
 public int GREEN = color(0,200,0);
@@ -27,7 +29,7 @@ public int ORANGE = color(180,90,0);
 public int LIGHT_BLUE = color(80,80,160);
 public int BRIGHT_BLUE = color(80,80,255);
 
-
+boolean armed = false;
 
 
 public void setup(){
@@ -42,13 +44,16 @@ public void setup(){
 
 public void draw(){
     background(200);
+    setFeedbacks();
+
     handleWaterSection();
     handlePlasmaSection();
     handlePressureSection();
     handleLineSection();
     handleFireSection();
     handleMotorSection();
-    plasmaI.active = keyPressed;
+
+    sendCommands();
 }
 public void bgRect(float posX, float posY, float width, float height){
     stroke(80);
@@ -102,14 +107,22 @@ class Button{
     boolean prevPressed = false;
     String text = "Button";
     float textSize = 25;
+    boolean prevActive = false;
+    boolean needArm = false;
     public void render(){
-        if(mouseInRect(this.posX,this.posY,100,40)){
-            fill(this.active?pressedColor(baseColor):selectedColor(baseColor));
-            stroke(40);
-            strokeWeight(3);
+        if(armed || !needArm){
+            if(mouseInRect(this.posX,this.posY,100,40)){
+                fill(this.active?pressedColor(baseColor):selectedColor(baseColor));
+                stroke(40);
+                strokeWeight(3);
+            }else{
+                fill(baseColor);
+                stroke(110);
+                strokeWeight(3);
+            }
         }else{
-            fill(baseColor);
-            stroke(110);
+            fill(brightness(baseColor)/1.5f);
+            stroke(110);    
             strokeWeight(3);
         }
         rect(this.posX,this.posY,100,40);
@@ -119,9 +132,11 @@ class Button{
         text(this.text,this.posX+50,this.posY+20);
     }
     public void update(){
+        this.prevActive = this.active;
+        
         if(mousePressed){
             if(mouseInRect(this.posX,this.posY,100,40)){
-                if(!this.prevPressed){
+                if(!this.prevPressed && (armed || !needArm)){
                     active = true;
                 }
             }else{
@@ -130,14 +145,109 @@ class Button{
         }else{
             active = false;
         }
+        
         this.prevPressed = mousePressed;
     }
-
     public void handle(){
         this.update();
         this.render();
     }
 }
+public void setFeedbacks(){
+    
+}
+public void sendCommands(){
+
+
+    if(bleedB.active != bleedB.prevActive){
+        if(bleedB.active){
+            commandBuffer+="1:900000\n";
+        }else{
+            commandBuffer+="1:0\n";
+        }
+    }
+
+
+    if(fillB.active != fillB.prevActive){
+        if(fillB.active){
+            commandBuffer+="2:900000\n";
+        }else{
+            commandBuffer+="2:0\n";
+        }
+    }   
+
+
+    if(enableWaterB.active && !enableWaterB.prevActive){
+        if(enableWaterB.active){
+            commandBuffer+="3:900000\n";
+        }
+    }
+    if(disableWaterB.active && !disableWaterB.prevActive){
+        if(disableWaterB.active){
+            commandBuffer+="3:0\n";
+        }
+    }    
+
+    if(plasmaTestB.active != plasmaTestB.prevActive){
+        if(plasmaTestB.active && armed){
+            commandBuffer+="4:"+str(PApplet.parseInt(plasmaDurationS.value*plasmaDurationS.range*1000))+"\n";
+        }else{
+            commandBuffer+="4:0\n";
+        }
+    }   
+
+
+
+    if(openB.active && !openB.prevActive){
+        if(openB.active && armed){
+            commandBuffer+="5:900000\n";
+        }
+    }
+    if(closeB.active && !closeB.prevActive){
+        if(closeB.active){
+            commandBuffer+="5:0\n";
+        }
+    } 
+
+
+
+    if(armB.active && !armB.prevActive){
+        if(armB.active){
+            commandBuffer+="6:90000000\n";
+            armed = true;
+        }
+    }
+    if(disarmB.active && !disarmB.prevActive){
+        if(disarmB.active){
+            commandBuffer+="6:0\n";
+            armed = false;
+        }
+    } 
+
+    
+
+    if(resetWaterB.active && !resetWaterB.prevActive){
+        if(resetWaterB.active){
+            commandBuffer+="7:0\n";
+        }
+    }
+
+
+    print(commandBuffer);
+    commandBuffer = "";
+}
+
+//channel list
+//ping : 0
+//bleed : 1
+//fill : 2
+//water : 3
+//igniter : 4
+//fire : 5
+//arm leds 6
+//reset water : 7
+//panMotor : 8
+//tiltMotor : 9
 class FireButton{
     float posX = 0;
     float posY = 0;
@@ -145,6 +255,7 @@ class FireButton{
     boolean armed = false;
     PImage background = null;
     boolean prevPressed = false;
+    boolean prevActive = false;
     public void render(){
         if(background != null){
             image(background,this.posX,this.posY,450,450);
@@ -182,6 +293,7 @@ class FireButton{
         rect(this.posX,this.posY,450,450,5);
     }
     public void update(){
+        this.prevActive = this.active;
         if(mousePressed){
             if(mouseIn(this.posX+225,this.posY+225,175)){
                 if(!this.prevPressed){
@@ -210,6 +322,7 @@ Button armB = new Button();
 Button disarmB = new Button();
 Button openB = new Button();
 Button closeB = new Button();
+ValSlider openTimeS = new ValSlider();
 
 public void setupFireSection(){
     fireButtonB.background=loadImage("buttonBG.png");
@@ -222,7 +335,7 @@ public void setupFireSection(){
     armI.baseColor = RED;
     mainValveI.baseColor = YELLOW;
     armI.text = "ARMED";
-    mainValveI.text = "M F V";
+    mainValveI.text = "MFV";
     mainValveI.textSize = 30;
     armB.posY = disarmB.posY = openB.posY = closeB.posY = firePosY+555;
     openB.posX = firePosX+25;
@@ -233,13 +346,22 @@ public void setupFireSection(){
     armB.baseColor = RED;
     disarmB.text = "DISARM";
     disarmB.baseColor = YELLOW;
-    
-
+    openB.text = "OPEN";
+    closeB.text = "CLOSE";
+    openTimeS.posX = firePosX+200;
+    openTimeS.posY = firePosY+500;
+    openTimeS.range = 3;
+    openTimeS.value = 0.5f/3;
+    openTimeS.steps = 60;
+    openB.needArm = true;
 }
 
 public void handleFireSection(){
     bgRect(firePosX,firePosY,500,620);
-    fireButtonB.armed = millis()%10000>5000;
+
+    fireButtonB.armed = armed;
+    armI.active = armed;
+
     fireButtonB.handle();
     mainValveI.handle();
     armI.handle();
@@ -247,6 +369,7 @@ public void handleFireSection(){
     disarmB.handle();
     openB.handle();
     closeB.handle();
+    openTimeS.handle();
 }
 class Indicator{
     float posX = 200;
@@ -388,6 +511,7 @@ public void setupPlasmaSection(){
     plasmaAutoB.posX = plasmaPosX+141.666f;
     plasmaAutoB.baseColor = MAGENTA;
     plasmaAutoB.text = "Toggle";
+    plasmaTestB.needArm = true;
 }
 
 
@@ -527,6 +651,7 @@ class TargetSlider{
     int roundF = 100;
     boolean drawBG = false;
     String heading = "Pressure : ";
+    float prevSetpoint = 0;
     public void setup(float x, float y, float w, float h){
         this.posX=x;
         this.posY=y;
@@ -585,6 +710,7 @@ class TargetSlider{
         text(heading+nf(PApplet.parseFloat(round(this.fill*range*100))/100,0,2)+unit,this.posX,this.posY-18);
     }
     public void update(){
+        this.prevSetpoint = this.setpoint;
         if(mousePressed && !this.prevPressed){
             if(mouseIn(this.width*this.setpoint+this.posX,this.height+this.posY+10,30)){
                 this.dragging = true;
@@ -615,6 +741,7 @@ class ValSlider{
     boolean prevPress = false;
     float valueOffset = 0;
     int baseColor = GRAY;
+    float steps = 40;
     public void render(){
         if(this.dragging||mouseInRect(this.posX,this.posY,100,40)){
             fill(this.dragging?pressedColor(baseColor):selectedColor(baseColor));
@@ -629,7 +756,7 @@ class ValSlider{
         fill(0);
         textAlign(CENTER,CENTER);
         textSize(30);
-        text(nf(round(40*this.value*this.range)/40.0f,0,2)+this.unit,this.posX+50,this.posY+20);
+        text(nf(round(steps*this.value*this.range)/steps,0,2)+this.unit,this.posX+50,this.posY+20);
     }
     public void update(){
         if(mouseInRect(this.posX,this.posY,100,40)){
@@ -643,7 +770,7 @@ class ValSlider{
             this.dragging = false;
         }
         if(dragging){
-            this.value = min(1,max(0,round(40.0f*(this.valueOffset+((mouseX-mouseStartX)/400)))/40.0f));
+            this.value = min(1,max(0,round(steps*(this.valueOffset+((mouseX-mouseStartX)/400)))/steps));
         }
 
         this.prevPress = mousePressed;

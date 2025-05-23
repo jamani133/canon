@@ -7,6 +7,7 @@ Button armB = new Button();
 Button disarmB = new Button();
 Button openB = new Button();
 Button closeB = new Button();
+ValSlider openTimeS = new ValSlider();
 
 void setupFireSection(){
     fireButtonB.background=loadImage("buttonBG.png");
@@ -30,13 +31,22 @@ void setupFireSection(){
     armB.baseColor = RED;
     disarmB.text = "DISARM";
     disarmB.baseColor = YELLOW;
-    
-
+    openB.text = "OPEN";
+    closeB.text = "CLOSE";
+    openTimeS.posX = firePosX+200;
+    openTimeS.posY = firePosY+500;
+    openTimeS.range = 3;
+    openTimeS.value = 0.5/3;
+    openTimeS.steps = 60;
+    openB.needArm = true;
 }
 
 void handleFireSection(){
     bgRect(firePosX,firePosY,500,620);
-    fireButtonB.armed = millis()%10000>5000;
+
+    fireButtonB.armed = armed;
+    armI.active = armed;
+
     fireButtonB.handle();
     mainValveI.handle();
     armI.handle();
@@ -44,4 +54,5 @@ void handleFireSection(){
     disarmB.handle();
     openB.handle();
     closeB.handle();
+    openTimeS.handle();
 }

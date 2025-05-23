@@ -5,6 +5,7 @@ class FireButton{
     boolean armed = false;
     PImage background = null;
     boolean prevPressed = false;
+    boolean prevActive = false;
     void render(){
         if(background != null){
             image(background,this.posX,this.posY,450,450);
@@ -42,6 +43,7 @@ class FireButton{
         rect(this.posX,this.posY,450,450,5);
     }
     void update(){
+        this.prevActive = this.active;
         if(mousePressed){
             if(mouseIn(this.posX+225,this.posY+225,175)){
                 if(!this.prevPressed){

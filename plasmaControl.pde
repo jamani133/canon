@@ -28,6 +28,7 @@ void setupPlasmaSection(){
     plasmaAutoB.posX = plasmaPosX+141.666;
     plasmaAutoB.baseColor = MAGENTA;
     plasmaAutoB.text = "Toggle";
+    plasmaTestB.needArm = true;
 }
 
 

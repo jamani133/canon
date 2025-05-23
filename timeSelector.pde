@@ -10,6 +10,7 @@ class ValSlider{
     boolean prevPress = false;
     float valueOffset = 0;
     color baseColor = GRAY;
+    float steps = 40;
     void render(){
         if(this.dragging||mouseInRect(this.posX,this.posY,100,40)){
             fill(this.dragging?pressedColor(baseColor):selectedColor(baseColor));
@@ -24,7 +25,7 @@ class ValSlider{
         fill(0);
         textAlign(CENTER,CENTER);
         textSize(30);
-        text(nf(round(40*this.value*this.range)/40.0,0,2)+this.unit,this.posX+50,this.posY+20);
+        text(nf(round(steps*this.value*this.range)/steps,0,2)+this.unit,this.posX+50,this.posY+20);
     }
     void update(){
         if(mouseInRect(this.posX,this.posY,100,40)){
@@ -38,7 +39,7 @@ class ValSlider{
             this.dragging = false;
         }
         if(dragging){
-            this.value = min(1,max(0,round(40.0*(this.valueOffset+((mouseX-mouseStartX)/400)))/40.0));
+            this.value = min(1,max(0,round(steps*(this.valueOffset+((mouseX-mouseStartX)/400)))/steps));
         }
 
         this.prevPress = mousePressed;
