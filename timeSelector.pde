@@ -1,4 +1,5 @@
 class ValSlider{
+    
     float posX = 500;
     float posY = 300;
     float value = 0;
@@ -8,13 +9,14 @@ class ValSlider{
     boolean dragging = false;
     boolean prevPress = false;
     float valueOffset = 0;
+    color baseColor = GRAY;
     void render(){
-        if(this.dragging||mouseIn(this.posX+50,this.posY+20,40)){
-            fill(160,160,190);
+        if(this.dragging||mouseInRect(this.posX,this.posY,100,40)){
+            fill(this.dragging?pressedColor(baseColor):selectedColor(baseColor));
             stroke(40);
             strokeWeight(3);
         }else{
-            fill(160);
+            fill(baseColor);
             stroke(110);
             strokeWeight(3);
         }
@@ -25,7 +27,7 @@ class ValSlider{
         text(nf(round(40*this.value*this.range)/40.0,0,2)+this.unit,this.posX+50,this.posY+20);
     }
     void update(){
-        if(mouseIn(this.posX+50,this.posY+20,40)){
+        if(mouseInRect(this.posX,this.posY,100,40)){
             if(mousePressed && !this.prevPress){
                 this.dragging = true;
                 this.mouseStartX = mouseX;

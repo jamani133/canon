@@ -51,7 +51,7 @@ class TargetSlider{
         
         strokeWeight(2);
         if(!focused && !dragging){
-            fill(160);
+            fill(GRAY);
             stroke(110);
             rect(max(min(this.setpoint*this.width-(this.textFieldSize/2),this.width-this.textFieldSize),0)+this.posX,this.posY+this.height+15,this.textFieldSize,30);
             fill(0);
@@ -59,7 +59,7 @@ class TargetSlider{
             textSize(20);
             text(str(float(round(round*this.setpoint*this.range))/round)+this.unit,   max(min(this.setpoint*this.width,this.width-(this.textFieldSize/2)),(this.textFieldSize/2))+this.posX,this.posY+this.height+30);
         }else{
-            fill(160,160,190);
+            fill(this.dragging?pressedColor(GRAY):selectedColor(GRAY));
             stroke(40);
             rect(max(min(this.setpoint*this.width-(this.textFieldSizeF/2),this.width-this.textFieldSizeF),0)+this.posX,this.posY+this.height+15,this.textFieldSizeF,40);
             fill(0);

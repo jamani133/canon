@@ -17,8 +17,6 @@ class PlasmaIndicator{
         strokeWeight(2);
         noFill();
         rect(this.posX,this.posY,100,50,25);
-        requested = mousePressed;
-        active = keyPressed;
         if(this.active){
             stroke(200,200,255);
             strokeWeight(sqr(random(1,2)));

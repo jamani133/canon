@@ -9,13 +9,15 @@ class BarIndicator{
     String heading = "Heading : ";
     String unit = "\tBar";
     float range = 9.81;
+    boolean drawBG = false;
 
     void show(){
-        fill(120);
-        strokeWeight(3);
-        stroke(80);
-        rect(this.posX-25,this.posY-40,this.width+50,this.height+65,20);
-
+        if(this.drawBG){
+            fill(120);
+            strokeWeight(3);
+            stroke(80);
+            rect(this.posX-25,this.posY-40,this.width+50,this.height+65,20);
+        }
         fill(this.bg);
         strokeWeight(3);
         stroke(0);

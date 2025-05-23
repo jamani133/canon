@@ -1,26 +1,27 @@
-BarIndicator linePressure = new BarIndicator();
-TargetSlider tankPressure = new TargetSlider();
-Joystick aimer = new Joystick();
-PlasmaIndicator indicator = new PlasmaIndicator();
-ValSlider time = new ValSlider();
-Button btn = new Button();
+
+public color RED = color(200,0,0);
+public color GREEN = color(0,200,0);
+public color BLUE = color(0,0,200);
+public color YELLOW = color(180,180,0);
+public color CYAN = color(0,180,180);
+public color MAGENTA = color(180,0,180);
+public color GRAY = color(160);
+public color ORANGE = color(180,90,0);
+public color LIGHT_BLUE = color(80,80,160);
+public color BRIGHT_BLUE = color(80,80,255);
+
+
+
+
 void setup(){
     size(1200,900);
-    tankPressure.setup(50,220,400,50);
+    setupWaterSection();
+    setupPlasmaSection();
 }
 
 void draw(){
     background(200);
-
-    bgRect(600,600,300,100);
-
-    linePressure.fill=map(millis()%1000,0,999,0,1);
-    linePressure.posX = sin(float(millis())/500.0)*400+450;
-
-    btn.handle();
-    time.handle();
-    linePressure.handle();
-    tankPressure.handle();
-    aimer.handle();
-    indicator.handle();
+    handleWaterSection();
+    handlePlasmaSection();
+    plasmaI.active = millis()%1000>500;
 }

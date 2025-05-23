@@ -29,7 +29,7 @@ class Joystick{
         if(this.dragging){
             float dx = (mouseX-(this.posX+(this.size/2)))/(this.size/4);
             float dy = (mouseY-(this.posY+(this.size/2)))/(this.size/4);
-            float d = sqrt((dx*dx)+(dy*dy));
+            float d = sqrt(sqr(dx)+sqr(dy));
             if(d>1){
                 dy = dy/d;
                 dx = dx/d;
