@@ -154,8 +154,50 @@ class Button{
     }
 }
 public void setFeedbacks(){
-    
+    String responseData = "7:812\n1:150\n4:10";
+    String valuePairs[] = responseData.split("\n");
+    for (String pair : valuePairs){
+        if(pair.length()>2){
+            switch(PApplet.parseInt(pair.split(":")[0])){
+                case 1:
+                    bleedingI.active = PApplet.parseInt(pair.split(":")[1]) > 0;
+                break;	
+                case 2:
+                    fillingI.active = PApplet.parseInt(pair.split(":")[1]) > 0;
+                break;	
+                case 3:
+                    waterRunningI.active = PApplet.parseInt(pair.split(":")[1]) > 0;
+                break;	
+                case 4:
+                    plasmaI.active = PApplet.parseInt(pair.split(":")[1] )> 0;
+                break;	
+                case 5:
+                    mainValveI.active = PApplet.parseInt(pair.split(":")[1]) > 0;
+                break;	
+                case 6:
+                    //int(pair.split(":")[1]) > 0;
+                break;	
+                case 7:
+                    linePressureI.fill = valToMPa(PApplet.parseInt(pair.split(":")[1] ));
+                break;	
+                case 8:
+                    pressureS.fill = valToMPa(PApplet.parseInt(pair.split(":")[1]) );
+                break;	
+            }
+        }
+    }
 }
+//ping : 0
+//bleed : 1
+//fill : 2
+//water : 3
+//igniter : 4
+//fire : 5
+//arm leds 6
+//line : 7
+//tank : 8
+
+
 public void sendCommands(){
 
 
@@ -187,6 +229,7 @@ public void sendCommands(){
             commandBuffer+="3:0\n";
         }
     }    
+
 
     if(plasmaTestB.active != plasmaTestB.prevActive){
         if(plasmaTestB.active && armed){
@@ -821,6 +864,9 @@ public int requestedColor(int inC){
     return(color(    min(255,(red(inC))*1.3f)   ,     min((green(inC))*1.3f,255),     min(255,(blue(inC))*1.3f)     ));
 }
 
+public float valToMPa(int val){
+    return val/1000.0f;
+}
 float waterPosX = 600;
 float waterPosY = 310;
 

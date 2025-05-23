@@ -38,3 +38,6 @@ color requestedColor(color inC){
     return(color(    min(255,(red(inC))*1.3)   ,     min((green(inC))*1.3,255),     min(255,(blue(inC))*1.3)     ));
 }
 
+float valToMPa(int val){
+    return val/1000.0;
+}

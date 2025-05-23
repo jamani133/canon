@@ -1,6 +1,48 @@
 void setFeedbacks(){
-    
+    String responseData = "7:812\n1:150\n4:10";
+    String valuePairs[] = responseData.split("\n");
+    for (String pair : valuePairs){
+        if(pair.length()>2){
+            switch(int(pair.split(":")[0])){
+                case 1:
+                    bleedingI.active = int(pair.split(":")[1]) > 0;
+                break;	
+                case 2:
+                    fillingI.active = int(pair.split(":")[1]) > 0;
+                break;	
+                case 3:
+                    waterRunningI.active = int(pair.split(":")[1]) > 0;
+                break;	
+                case 4:
+                    plasmaI.active = int(pair.split(":")[1] )> 0;
+                break;	
+                case 5:
+                    mainValveI.active = int(pair.split(":")[1]) > 0;
+                break;	
+                case 6:
+                    //int(pair.split(":")[1]) > 0;
+                break;	
+                case 7:
+                    linePressureI.fill = valToMPa(int(pair.split(":")[1] ));
+                break;	
+                case 8:
+                    pressureS.fill = valToMPa(int(pair.split(":")[1]) );
+                break;	
+            }
+        }
+    }
 }
+//ping : 0
+//bleed : 1
+//fill : 2
+//water : 3
+//igniter : 4
+//fire : 5
+//arm leds 6
+//line : 7
+//tank : 8
+
+
 void sendCommands(){
 
 
@@ -32,6 +74,7 @@ void sendCommands(){
             commandBuffer+="3:0\n";
         }
     }    
+
 
     if(plasmaTestB.active != plasmaTestB.prevActive){
         if(plasmaTestB.active && armed){
