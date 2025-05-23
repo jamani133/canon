@@ -101,7 +101,7 @@ class Button{
     boolean active = false;
     boolean prevPressed = false;
     String text = "Button";
-
+    float textSize = 25;
     public void render(){
         if(mouseInRect(this.posX,this.posY,100,40)){
             fill(this.active?pressedColor(baseColor):selectedColor(baseColor));
@@ -115,7 +115,7 @@ class Button{
         rect(this.posX,this.posY,100,40);
         fill(0);
         textAlign(CENTER,CENTER);
-        textSize(30);
+        textSize(textSize);
         text(this.text,this.posX+50,this.posY+20);
     }
     public void update(){
@@ -204,16 +204,49 @@ class FireButton{
 float firePosX = 1150;
 float firePosY = 215;
 FireButton fireButtonB = new FireButton();
+Indicator mainValveI = new Indicator();
+Indicator armI = new Indicator();
+Button armB = new Button();
+Button disarmB = new Button();
+Button openB = new Button();
+Button closeB = new Button();
+
 public void setupFireSection(){
     fireButtonB.background=loadImage("buttonBG.png");
     fireButtonB.posX = firePosX+25;
     fireButtonB.posY = firePosY+25;
+    mainValveI.posX = firePosX+25;
+    mainValveI.posY = firePosY+500;
+    armI.posX = firePosX+375;
+    armI.posY = firePosY+490;
+    armI.baseColor = RED;
+    mainValveI.baseColor = YELLOW;
+    armI.text = "ARMED";
+    mainValveI.text = "M F V";
+    mainValveI.textSize = 30;
+    armB.posY = disarmB.posY = openB.posY = closeB.posY = firePosY+555;
+    openB.posX = firePosX+25;
+    closeB.posX = firePosX+141.666f;
+    armB.posX = firePosX+258.333f;
+    disarmB.posX = firePosX+375;
+    armB.text = "ARM";
+    armB.baseColor = RED;
+    disarmB.text = "DISARM";
+    disarmB.baseColor = YELLOW;
+    
+
 }
 
 public void handleFireSection(){
-    bgRect(firePosX,firePosY,500,600);
+    bgRect(firePosX,firePosY,500,620);
     fireButtonB.armed = millis()%10000>5000;
     fireButtonB.handle();
+    mainValveI.handle();
+    armI.handle();
+    armB.handle();
+    disarmB.handle();
+    openB.handle();
+    closeB.handle();
 }
 class Indicator{
     float posX = 200;
@@ -236,7 +269,7 @@ class Indicator{
             stroke(110);
         }
         strokeWeight(3);
-        rect(this.posX,this.posY,100,40);
+        rect(this.posX,this.posY,100,40,14);
         fill(0);
         textAlign(CENTER,CENTER);
         textSize(this.textSize);

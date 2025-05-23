@@ -6,7 +6,7 @@ class Button{
     boolean active = false;
     boolean prevPressed = false;
     String text = "Button";
-
+    float textSize = 25;
     void render(){
         if(mouseInRect(this.posX,this.posY,100,40)){
             fill(this.active?pressedColor(baseColor):selectedColor(baseColor));
@@ -20,7 +20,7 @@ class Button{
         rect(this.posX,this.posY,100,40);
         fill(0);
         textAlign(CENTER,CENTER);
-        textSize(30);
+        textSize(textSize);
         text(this.text,this.posX+50,this.posY+20);
     }
     void update(){

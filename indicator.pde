@@ -19,7 +19,7 @@ class Indicator{
             stroke(110);
         }
         strokeWeight(3);
-        rect(this.posX,this.posY,100,40);
+        rect(this.posX,this.posY,100,40,14);
         fill(0);
         textAlign(CENTER,CENTER);
         textSize(this.textSize);
