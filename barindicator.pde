@@ -24,7 +24,7 @@ class BarIndicator{
         rect(this.posX,this.posY,this.width,this.height);
         fill(this.fg);
         noStroke();
-        rect(this.posX+3,this.posY+3,this.width*this.fill-4,this.height-5);
+        rect(this.posX+3,this.posY+3,max(0,this.width*this.fill-4),this.height-5);
         fill(255);
         textAlign(LEFT,CENTER);
         textSize(25);

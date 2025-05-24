@@ -1,5 +1,5 @@
 void firingSequence(){
-    if(fireButtonB.active && !fireButtonB.prevActive){
+    if(fireButtonB.active && !fireButtonB.prevActive && armed){
         firingSequenceStart = millis();
         sequenceStep = 0;
     }

@@ -1,5 +1,5 @@
 void setFeedbacks(){
-    String responseData = "7:812\n1:150\n4:10";
+    String responseData = "0:0\n1:0\n2:0\n3:0\n4:0\n5:0\n6:0\n7:0\n8:0\n9:0";
     if(usingSerial){
         responseData = "";
         while(serial.available()>0){
@@ -14,7 +14,7 @@ void setFeedbacks(){
         if(pair.length()>2){
             switch(int(pair.split(":")[0])){
                 case 0:
-                    heartbeat = int(pair.split(":")[1]) > 0;
+                    heartbeatI.active = int(pair.split(":")[1]) > 0;
                 break;
                 case 1:
                     bleedingI.active = int(pair.split(":")[1]) > 0;
@@ -40,6 +40,9 @@ void setFeedbacks(){
                 case 8:
                     pressureS.fill = valToMPa(int(pair.split(":")[1]) );
                 break;	
+                case 9:
+                    waterLevelI.fill = (int(pair.split(":")[1])/1000);
+                break;	
             }
         }
     }
@@ -53,6 +56,7 @@ void setFeedbacks(){
 //arm leds 6
 //line : 7
 //tank : 8
+//waterLevel : 9
 
 
 void sendCommands(){

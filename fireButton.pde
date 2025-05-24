@@ -20,7 +20,7 @@ class FireButton{
             fill(inactiveColor(RED));
         }
         stroke(0);
-        strokeWeight(mouseIn(this.posX+225,this.posY+225,175)?5:1);
+        strokeWeight(mouseIn(this.posX+225,this.posY+225,175)&&armed?5:1);
         ellipse(this.posX+225,this.posY+225,350,350);
         if(this.armed){
             fill(100,0,0);

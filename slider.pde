@@ -40,7 +40,7 @@ class TargetSlider{
         rect(this.posX,this.posY,this.width,this.height);
         fill(this.fg);
         noStroke();
-        rect(this.posX+3,this.posY+3,this.width*this.fill-4,this.height-5);
+        rect(this.posX+3,this.posY+3,max(0,this.width*this.fill-4),this.height-5);
         fill(slideColor);
         stroke(slideColor);
         strokeWeight(2);

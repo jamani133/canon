@@ -104,7 +104,7 @@ class BarIndicator{
         rect(this.posX,this.posY,this.width,this.height);
         fill(this.fg);
         noStroke();
-        rect(this.posX+3,this.posY+3,this.width*this.fill-4,this.height-5);
+        rect(this.posX+3,this.posY+3,max(0,this.width*this.fill-4),this.height-5);
         fill(255);
         textAlign(LEFT,CENTER);
         textSize(25);
@@ -171,7 +171,7 @@ class Button{
     }
 }
 public void setFeedbacks(){
-    String responseData = "7:812\n1:150\n4:10";
+    String responseData = "0:0\n1:0\n2:0\n3:0\n4:0\n5:0\n6:0\n7:0\n8:0\n9:0";
     if(usingSerial){
         responseData = "";
         while(serial.available()>0){
@@ -186,7 +186,7 @@ public void setFeedbacks(){
         if(pair.length()>2){
             switch(PApplet.parseInt(pair.split(":")[0])){
                 case 0:
-                    heartbeat = PApplet.parseInt(pair.split(":")[1]) > 0;
+                    heartbeatI.active = PApplet.parseInt(pair.split(":")[1]) > 0;
                 break;
                 case 1:
                     bleedingI.active = PApplet.parseInt(pair.split(":")[1]) > 0;
@@ -212,6 +212,9 @@ public void setFeedbacks(){
                 case 8:
                     pressureS.fill = valToMPa(PApplet.parseInt(pair.split(":")[1]) );
                 break;	
+                case 9:
+                    waterLevelI.fill = (PApplet.parseInt(pair.split(":")[1])/1000);
+                break;	
             }
         }
     }
@@ -225,6 +228,7 @@ public void setFeedbacks(){
 //arm leds 6
 //line : 7
 //tank : 8
+//waterLevel : 9
 
 
 public void sendCommands(){
@@ -356,7 +360,7 @@ class FireButton{
             fill(inactiveColor(RED));
         }
         stroke(0);
-        strokeWeight(mouseIn(this.posX+225,this.posY+225,175)?5:1);
+        strokeWeight(mouseIn(this.posX+225,this.posY+225,175)&&armed?5:1);
         ellipse(this.posX+225,this.posY+225,350,350);
         if(this.armed){
             fill(100,0,0);
@@ -527,7 +531,7 @@ class Joystick{
         ellipse(this.posX+(this.size/2)+((this.size*0.25f)*this.joyX),this.posY+(this.size/2)+((this.size*0.25f)*this.joyY),this.size*0.3f,this.size*0.3f);
     }
     public void update(){
-        print(this.posY+(this.size/2));
+        
         if(mouseIn(this.posX+(this.size/2),this.posX+(this.size/2),this.size/10*4)){
             if(mousePressed && !this.prevPress){
                 this.dragging = true;
@@ -741,7 +745,7 @@ public void handlePressureSection(){
     pressureS.handle();
 }
 public void firingSequence(){
-    if(fireButtonB.active && !fireButtonB.prevActive){
+    if(fireButtonB.active && !fireButtonB.prevActive && armed){
         firingSequenceStart = millis();
         sequenceStep = 0;
     }
@@ -833,7 +837,7 @@ class TargetSlider{
         rect(this.posX,this.posY,this.width,this.height);
         fill(this.fg);
         noStroke();
-        rect(this.posX+3,this.posY+3,this.width*this.fill-4,this.height-5);
+        rect(this.posX+3,this.posY+3,max(0,this.width*this.fill-4),this.height-5);
         fill(slideColor);
         stroke(slideColor);
         strokeWeight(2);
