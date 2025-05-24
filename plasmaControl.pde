@@ -43,10 +43,12 @@ void handlePlasmaSection(){
     textSize(20);
     text("Duration",plasmaPosX+258.333+50,plasmaPosY+30);
     text("Delay",plasmaPosX+425,plasmaPosY+30);
+    plasmaAutoI.active = autoFire;
     plasmaI.handle();
     plasmaAutoI.handle();
     plasmaDelayS.handle();
     plasmaDurationS.handle();
     plasmaAutoB.handle();
     plasmaTestB.handle();
+    if(plasmaAutoB.active && !plasmaAutoB.prevActive){autoFire=!autoFire;}
 }

@@ -8,9 +8,9 @@ Arduino side
 
 
 Controller side
-    Firing sequence
-    IO manager
-    adjust sequence
+    +Firing sequence
+    +IO manager
+    +adjust sequence
     heartbeat
 
 

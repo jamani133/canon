@@ -1,9 +1,21 @@
 void setFeedbacks(){
     String responseData = "7:812\n1:150\n4:10";
+    if(usingSerial){
+        responseData = "";
+        while(serial.available()>0){
+            responseData += serial.readString();
+        }
+    }
+    
+
+
     String valuePairs[] = responseData.split("\n");
     for (String pair : valuePairs){
         if(pair.length()>2){
             switch(int(pair.split(":")[0])){
+                case 0:
+                    heartbeat = int(pair.split(":")[1]) > 0;
+                break;
                 case 1:
                     bleedingI.active = int(pair.split(":")[1]) > 0;
                 break;	
@@ -20,7 +32,7 @@ void setFeedbacks(){
                     mainValveI.active = int(pair.split(":")[1]) > 0;
                 break;	
                 case 6:
-                    //int(pair.split(":")[1]) > 0;
+                    
                 break;	
                 case 7:
                     linePressureI.fill = valToMPa(int(pair.split(":")[1] ));
@@ -120,8 +132,22 @@ void sendCommands(){
         }
     }
 
+    if(millis()%1000 > 500 && !heartbeat){
+        heartbeat = true;
+        commandBuffer+="0:1\n";
+    }
+    if(millis()%1000 < 500 && heartbeat){
+        heartbeat = false;
+        commandBuffer+="0:0\n";
+    }
+
+    firingSequence();
+    adjustSequence();
 
     print(commandBuffer);
+    if(usingSerial){
+        serial.write(commandBuffer);
+    }
     commandBuffer = "";
 }
 

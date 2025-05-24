@@ -1,5 +1,12 @@
+import processing.serial.*;
+
+boolean usingSerial = false;
+
+Serial serial;
+
 String commandBuffer = "";
 
+int firingSequenceStart = -600000;
 
 public color RED = color(200,0,0);
 public color GREEN = color(0,200,0);
@@ -13,9 +20,16 @@ public color LIGHT_BLUE = color(80,80,160);
 public color BRIGHT_BLUE = color(80,80,255);
 
 boolean armed = false;
-
-
+boolean autoFire = false;
+boolean adjusting = false;
+boolean directionUp = false;
+boolean heartbeat = false;
+int sequenceStep = 0;
 void setup(){
+    if(usingSerial){
+        printArray(Serial.list());
+        serial = new Serial(this, Serial.list()[1], 115200);
+    }
     size(1700,535+450);
     setupWaterSection();
     setupPlasmaSection();
@@ -23,6 +37,7 @@ void setup(){
     setupLineSection();
     setupMotorSection();
     setupFireSection();
+    setupInfos();
 }
 
 void draw(){
@@ -35,6 +50,6 @@ void draw(){
     handleLineSection();
     handleFireSection();
     handleMotorSection();
-
+    handleInfos();
     sendCommands();
 }

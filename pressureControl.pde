@@ -43,7 +43,7 @@ void setupPressureSection(){
 }
 void handlePressureSection(){
     bgRect(pressurePosX,pressurePosY,1050,210);
-    
+    adjustingI.active = adjusting;
     bleedB.handle();
     fillB.handle();
     stopB.handle();
