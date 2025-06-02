@@ -19,7 +19,7 @@ public class canon extends PApplet {
 
 
 
-boolean usingSerial = false;
+boolean usingSerial = true;
 
 Serial serial;
 
@@ -47,7 +47,7 @@ int sequenceStep = 0;
 public void setup(){
     if(usingSerial){
         printArray(Serial.list());
-        serial = new Serial(this, Serial.list()[1], 115200);
+        serial = new Serial(this, Serial.list()[3], 115200);
     }
     /* size commented out by preprocessor */;
     setupWaterSection();
@@ -182,6 +182,7 @@ public void setFeedbacks(){
 
 
     String valuePairs[] = responseData.split("\n");
+    print("\t\t"+responseData);
     for (String pair : valuePairs){
         if(pair.length()>2){
             switch(PApplet.parseInt(pair.split(":")[0])){
@@ -774,20 +775,20 @@ public void adjustSequence(){
     float pressureLine = linePressureI.fill*linePressureI.range;
     if(adjustB.active && !adjustB.prevActive){
         adjusting = true;
-        directionUp = pressureTarget>pressureTank;
+        directionUp = pressureTarget<pressureTank;
     }
     if(stopB.active && !stopB.prevActive){
         adjusting = false;
     }
     if (adjusting){
         if(directionUp){
-            if(pressureTank<pressureTarget){
+            if(pressureTank>pressureTarget){
                 commandBuffer+="1:100\n";
             }else{
                 adjusting=false;
             }
         }else{
-            if(pressureTank>pressureTarget){
+            if(pressureTank<pressureTarget){
                 commandBuffer+="2:100\n";
             }else{
                 adjusting=false;
@@ -987,7 +988,7 @@ public int requestedColor(int inC){
 }
 
 public float valToMPa(int val){
-    return val/1000.0f;
+    return map(val,0,430,0,0.282f);
 }
 float waterPosX = 600;
 float waterPosY = 310;

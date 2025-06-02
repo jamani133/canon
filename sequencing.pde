@@ -28,20 +28,20 @@ void adjustSequence(){
     float pressureLine = linePressureI.fill*linePressureI.range;
     if(adjustB.active && !adjustB.prevActive){
         adjusting = true;
-        directionUp = pressureTarget>pressureTank;
+        directionUp = pressureTarget<pressureTank;
     }
     if(stopB.active && !stopB.prevActive){
         adjusting = false;
     }
     if (adjusting){
         if(directionUp){
-            if(pressureTank<pressureTarget){
+            if(pressureTank>pressureTarget){
                 commandBuffer+="1:100\n";
             }else{
                 adjusting=false;
             }
         }else{
-            if(pressureTank>pressureTarget){
+            if(pressureTank<pressureTarget){
                 commandBuffer+="2:100\n";
             }else{
                 adjusting=false;

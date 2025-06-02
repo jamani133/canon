@@ -10,6 +10,7 @@ void setFeedbacks(){
 
 
     String valuePairs[] = responseData.split("\n");
+    print("\t\t"+responseData);
     for (String pair : valuePairs){
         if(pair.length()>2){
             switch(int(pair.split(":")[0])){
