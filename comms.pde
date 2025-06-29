@@ -15,7 +15,7 @@ void setFeedbacks(){
         if(pair.length()>2){
             switch(int(pair.split(":")[0])){
                 case 0:
-                    heartbeatI.active = int(pair.split(":")[1]) > 0;
+                    //heartbeatI.active = int(pair.split(":")[1]) > 0;
                 break;
                 case 1:
                     bleedingI.active = int(pair.split(":")[1]) > 0;
