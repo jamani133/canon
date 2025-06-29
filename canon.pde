@@ -1,6 +1,6 @@
 import processing.serial.*;
 
-boolean usingSerial = true;
+boolean usingSerial = false;
 
 Serial serial;
 
@@ -28,7 +28,7 @@ int sequenceStep = 0;
 void setup(){
     if(usingSerial){
         printArray(Serial.list());
-        serial = new Serial(this, Serial.list()[3], 115200);
+        serial = new Serial(this, Serial.list()[0], 115200);
     }
     size(1700,535+450);
     setupWaterSection();
