@@ -36,7 +36,7 @@ void setupFireSection(){
     openTimeS.posX = firePosX+200;
     openTimeS.posY = firePosY+500;
     openTimeS.range = 3;
-    openTimeS.value = 0.5/3;
+    openTimeS.value = 0.1/3;
     openTimeS.steps = 60;
     openB.needArm = true;
 }

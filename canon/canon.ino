@@ -7,7 +7,7 @@
 #define plasma 33
 #define linePressure 27
 #define tankPressure 25
-#define waterWheel 31
+#define waterWheel 23
 
 //33 26 fire / plasma
 
@@ -40,7 +40,7 @@ void setup() {
   pinMode(water,OUTPUT);
   pinMode(plasma,OUTPUT);
   pinMode(waterWheel,INPUT);
-  //attachInterrupt(waterWheel, waterHandler, RISING);
+  attachInterrupt(waterWheel, waterHandler, RISING);
 }
 
 void loop() {
@@ -105,13 +105,16 @@ void loop() {
     "\n9:"+String(waterLevel);
 
     if(heartbeat){
-      repo = repo+"0:1";
+      repo = repo+"\n0:1";
     }else{
-      repo = repo+"0:0";
+      repo = repo+"\n0:0";
     }
     ctrl.print(repo);
     divider = 0;
   }
 
   
+}
+void waterHandler(){
+  waterLevel++;
 }

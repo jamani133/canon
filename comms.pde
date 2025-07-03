@@ -13,9 +13,10 @@ void setFeedbacks(){
     print("\t\t"+responseData);
     for (String pair : valuePairs){
         if(pair.length()>2){
+            println(pair);
             switch(int(pair.split(":")[0])){
                 case 0:
-                    //heartbeatI.active = int(pair.split(":")[1]) > 0;
+                    heartbeatI.active = pair.split(":")[1] == "1";
                 break;
                 case 1:
                     bleedingI.active = int(pair.split(":")[1]) > 0;
