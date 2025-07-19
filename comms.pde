@@ -16,7 +16,7 @@ void setFeedbacks(){
             println(pair);
             switch(int(pair.split(":")[0])){
                 case 0:
-                    heartbeatI.active = pair.split(":")[1] == "1";
+                    heartbeatI.active = int(pair.split(":")[1]) == 1;
                 break;
                 case 1:
                     bleedingI.active = int(pair.split(":")[1]) > 0;
@@ -37,13 +37,13 @@ void setFeedbacks(){
                     
                 break;	
                 case 7:
-                    linePressureI.fill = valToMPa(int(pair.split(":")[1] ));
+                    linePressureI.fill = (linePressureI.fill*0.95)+(valToMPa(int(pair.split(":")[1] ))*0.05);
                 break;	
                 case 8:
-                    pressureS.fill = valToMPa(int(pair.split(":")[1]) );
+                    pressureS.fill = (pressureS.fill*0.95)+(valToMPa(int(pair.split(":")[1]) )*0.05);
                 break;	
                 case 9:
-                    waterLevelI.fill = (int(pair.split(":")[1])/1000);
+                    waterLevelI.fill = map(int(pair.split(":")[1]),0,800,0,0.04);
                 break;	
             }
         }

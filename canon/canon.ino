@@ -8,6 +8,8 @@
 #define linePressure 27
 #define tankPressure 25
 #define waterWheel 23
+#define RXD2 2
+#define TXD2 4
 
 //33 26 fire / plasma
 
@@ -33,7 +35,7 @@ int divider = 0;
 
 void setup() {
   //ctrl.begin("pew pew maddafuggers");
-  ctrl.begin(115200);
+  ctrl.begin(115200,SERIAL_8N1, RXD2, TXD2);
   pinMode(charge,OUTPUT);
   pinMode(discharge,OUTPUT);
   pinMode(fire,OUTPUT);

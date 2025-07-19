@@ -37,14 +37,22 @@ void adjustSequence(){
         if(directionUp){
             if(pressureTank>pressureTarget){
                 commandBuffer+="1:100\n";
+                pressureSettle = 0;
             }else{
-                adjusting=false;
+                pressureSettle++;
+                if(pressureSettle > 1000){
+                    adjusting=false;
+                }
             }
         }else{
             if(pressureTank<pressureTarget){
                 commandBuffer+="2:100\n";
+                pressureSettle = 0;
             }else{
-                adjusting=false;
+                pressureSettle++;
+                if(pressureSettle > 1000){
+                    adjusting=false;
+                }
             }
         }
     }

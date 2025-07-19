@@ -25,6 +25,7 @@ boolean adjusting = false;
 boolean directionUp = false;
 boolean heartbeat = false;
 int sequenceStep = 0;
+int pressureSettle = 0;
 void setup(){
     if(usingSerial){
         printArray(Serial.list());

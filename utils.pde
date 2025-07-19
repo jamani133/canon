@@ -39,5 +39,6 @@ color requestedColor(color inC){
 }
 
 float valToMPa(int val){
-    return map(val,0,430,0,0.282);
+    float linear = map(val,0,430,0,0.282);
+    return linear>0?linear+0.05:0;
 }
